@@ -1,17 +1,26 @@
-﻿using GeradorTxt;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Presentation.Menu;
+using Application.DependencyInjection;
+using Presentation.DependencyInjection;
+using Infrastructure.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ConsoleApp1
 {
-    public class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
-            MainConsole.Run();
+            var services = new ServiceCollection();
+
+            services.AddApplicationServices();
+            services.AddPresentationServices();
+            services.AddInfrastructureServices();
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            serviceProvider
+                .GetRequiredService<GerenciadorMenu>()
+                .Executar();
         }
     }
 }
