@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Domain.Entities;
+using Domain.Extensions;
 
 namespace Application.Formatters
 {
@@ -15,6 +16,8 @@ namespace Application.Formatters
             _montador = new StringBuilder();
 
             EscreverLinhas();
+            EscreverLinhasQtdTotalPorTipo();
+            EscreverLinhaQtdTotal();
 
             return _montador.ToString();
         }
@@ -46,6 +49,27 @@ namespace Application.Formatters
                 _montador.Append(Environment.NewLine);
                 EscreverLinha(filho);
             }
+        }
+
+        private void EscreverLinhasQtdTotalPorTipo()
+        {
+            const string CodigoQtdTotalLinhasPorTipo = "09";
+
+            foreach (var totalTipo in _linhas.ObterContagemPorCodigo())
+            {
+                _montador.Append(Environment.NewLine);
+                _montador.Append($"{CodigoQtdTotalLinhasPorTipo}|{totalTipo.Codigo}|{totalTipo.Quantidade}");
+            }
+        }
+
+        private void EscreverLinhaQtdTotal()
+        {
+            const string CodigoQtdTotal = "99";
+            var qtdTotal = _linhas.ContarTodasAsLinhas();
+
+            _montador.Append(Environment.NewLine);
+            _montador.Append(Environment.NewLine);
+            _montador.Append($"{CodigoQtdTotal}|{qtdTotal}");
         }
     }
 }
